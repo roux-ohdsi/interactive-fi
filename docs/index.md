@@ -16,24 +16,26 @@ const vafi_all = aq.from(vafi)
   .filter((d) => d.sex == "All")
   .fold(['frail', 'prefrail', "robust"], { as: ['var', 'score'] })
   .derive({ fi: d => "vafi" })
+  //.derive({ score: d => d.score/100})
 
   
 const efi_all = aq.from(efi)
   .filter((d) => d.sex == "All")
   .fold(['frail', 'prefrail', "robust"], { as: ['var', 'score'] })
   .derive({ fi: d => "efi" })
+  //.derive({ score: d => d.score/100})
   
 const fi = vafi_all.concat(efi_all)
 ```
 
 ```js
-//Inputs.table(vafi_all)
+//Inputs.table(efi_all)
 ```
 
 ```js
 
 const all_plot = Plot.plot({
-      title: "Frailty Scores by data source",
+      title: "Frailty Scores by Data Source",
       marginBottom: 60,
       x: {
            type: "point",
@@ -42,20 +44,37 @@ const all_plot = Plot.plot({
         },
       fill: {
                 legend: false,
-                type: "categorical",
-                scheme: "Dark2",
+                type: "categorical"//,
+               // scheme: "Tableau10"//,
+                //range: ["green", "yellow", "red"]
                 //domain: "def"
               },
-      color: {legend: false},
-      y: {domain: [0,1]},
+      color: {legend: false,
+              type: "categorical",
+              //scheme: "Tableau10",
+              //domain: ["var1", "var2", "var3"],
+              range: ["#FF725C", "#EFB118", "#3CA951"]
+              },
+      y: {domain: [0,100], percent: true},
       width,
       symbol: {legend: false},
+      facet: {data: vafi_all,
+              x: "source",
+              label: null
+              },
       marks: [
+         //Plot.frame({fx: "AOU", fill: "#ff725c10"}),
+         //Plot.frame({fx: "Pharmetrics", fill: "#ff725c10"}),
+         //Plot.frame({fx: "IMRD EMIS", fill: "#4269d010"}),
+         //Plot.frame({fx: "IMRD UK", fill: "#4269d010"}),
+         //Plot.frame({fx: "UKBB", fill: "#4269d010"}),
          Plot.ruleY([0]),
+         //Plot.ruleX(["[140]"], {stroke: "red", fx: ["Pharmetrics"]}),
          Plot.dot(vafi_all, {x: "age_group",
                                     y: "score",
                                     stroke: "#FFF",
-                                    fx:"source",
+                                    channels: {country: 'country'},
+                                    fx:"source", sort: {fx: "-country"},
                                     symbol: "fi",
                                     fill: "var",
                                     r: 5,
@@ -64,13 +83,13 @@ const all_plot = Plot.plot({
                                    sort: "age_group",
                                     y: "score",
                                     stroke: "var",
-                                    strokeOpacity: 0.5,
-                                    fx:"source"
+                                    strokeOpacity: 0.5,channels: {country: 'country'},
+                                    fx:"source", sort: {fx: "-country"}
                                     }),
         Plot.dot(efi_all, {x: "age_group",
                                     y: "score",
-                                    stroke: "#FFF",
-                                    fx:"source",
+                                    stroke: "#FFF",channels: {country: 'country'},
+                                    fx:"source", sort: {fx: "-country"},
                                     symbol: "fi",
                                     fill: "var",
                                     r: 5,
@@ -80,10 +99,12 @@ const all_plot = Plot.plot({
                                     y: "score",
                                     stroke: "var",
                                     //strokeDasharray: "4, 6",
-                                    strokeOpacity: 0.5,
-                                    fx:"source"
+                                    strokeOpacity: 0.5,channels: {country: 'country'},
+                                    fx:"source", sort: {fx: "-country"}
                                     }),
-        Plot.axisX({tickRotate: -45})
+        Plot.axisX({tickRotate: -45, label: "Age Group"}),
+        Plot.axisY({label: "Incidence (%)"})
+        
         ]
     })
 
@@ -133,6 +154,19 @@ const selected_vafi_data = Generators.input(selected_vafi);
 
 const y_lim = Inputs.range([0, 1], {label: "y-axis limits", step: 0.1,  value: 1});
 const ylim_data = Generators.input(y_lim);
+
+const observable5 = [
+  "#4269d0", // blue
+  "#efb118", // orange
+  "#ff725c", // red
+  //"#6cc5b0", // cyan
+  "#3ca951", // green
+  //"#ff8ab7", // pink
+  "#a463f2" // purple
+  //"#97bbf5", // light blue
+ // "#9c6b4e", // brown
+ // "#9498a0"  // gray
+]
 ```
 
 <div class="grid grid-cols-2">
@@ -155,7 +189,13 @@ const ylim_data = Generators.input(y_lim);
                 scheme: "Dark2",
                 //domain: "def"
               },
-      color: {legend: true},
+      color: {legend: true,
+              range: ["#4269d0", // blue
+                      "#efb118", // orange
+                      "#ff725c", // red
+                      "#3ca951", // green
+                      "#a463f2" // purple
+                      ]},
       width,
       symbol: {legend: false},
       marks: [
@@ -203,7 +243,13 @@ const ylim_data = Generators.input(y_lim);
                 scheme: "Dark2",
                 //domain: "def"
               },
-      color: {legend: true},
+      color: {legend: true,
+              range: ["#4269d0", // blue
+                      "#efb118", // orange
+                      "#ff725c", // red
+                      "#3ca951", // green
+                      "#a463f2" // purple
+                      ]},
       width,
       symbol: {legend: false},
       marks: [

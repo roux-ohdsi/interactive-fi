@@ -38,8 +38,8 @@ o = map_dfr(overall, read_csv_name_o) %>%
   )) %>% rowwise() %>%
   mutate(sex = ifelse(is_female == 0, "Male", "Female"),
          age_group = ifelse(age_group == "[80,100)","[80,120]", age_group),
-         n_frail = prefrail*n,
-         n_prefrail = frail*n,
+         n_frail = frail*n,
+         n_prefrail = prefrail*n,
          n_robust = n-n_frail-n_prefrail,
          robust = n_robust/n) %>% #,
   #age_group = str_remove_all(age_group, "\\[|\\]|\\(|\\)")) %>%
@@ -49,14 +49,17 @@ ov = o %>%
   summarize(n = sum(n),
             n_frail = sum(n_frail),
             n_prefrail = sum(n_prefrail),
-            n_robust = sum(n_robust), .by = c("age_group", "source")) %>%
+            n_robust = sum(n_robust),
+            .by = c("age_group", "source")) %>%
   rowwise() %>%
   mutate(robust = n_robust/n,
          frail = n_frail/n,
          prefrail = n_prefrail/n) %>%
   mutate(sex = "All")
 
-all = bind_rows(o, ov)
+all = bind_rows(o, ov) |> 
+  mutate(country = ifelse(str_detect(source, "AOU|Pharm"), "US", "UK")) |> 
+  arrange(source,  sex, age_group)
 
 cat(format_csv(all))
 
