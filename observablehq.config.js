@@ -2,6 +2,14 @@
 export default {
   // The project’s title; used in the sidebar and webpage titles.
   title: "Interactive Frailty Indices",
+  pages: [
+    {name: "Primary Results", path: ""},
+    {name: "Primary Results By Sex", path: "/by-reported-sex"},
+    {name: "Primary Results - Categories", path: "/primary-categories"},
+    {name: "Primary Results By Sex - Categories", path: "/by-reported-sex-categories"}//,
+    //{name: "Categories by Sex", path: "/staying-awesome"}
+  ],
+  footer: `built with Observable at ${(new Date()).toLocaleString('en-US', {dateStyle: 'long', timeStyle: 'long'})}`
 
   // The pages and sections in the sidebar. If you don’t specify this option,
   // all pages will be listed in alphabetical order. Listing pages explicitly
