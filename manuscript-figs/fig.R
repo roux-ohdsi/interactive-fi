@@ -1,5 +1,6 @@
 library(tidyverse)
 library(here)
+library(table1)
 
 l = list.files(here::here("docs", "data", "data"),
                include.dirs = FALSE, pattern = "acute1-chronic1", full.names = TRUE)
@@ -71,14 +72,10 @@ label(df_table$source) <- "Data Source"
 units(df_table$age_group)   <- "years"
 units(df_table$sex)    <- "at birth"
 
-table1(~ sex + age_group + efi + vafi | source, data = df_table)
+t1 = table1(~ sex + age_group + efi + vafi | source, data = df_table, overall = FALSE, big.mark=",")
+t1
+library(flextable)
 
-results <-
-  survey::svydesign(~ 1, data = df_lim, weights = ~ n) %>%
-  tbl_svysummary(
-    by = source,
-    include = c(sex, age_group),
-    statistic = list(all_categorical() ~ "{n_unweighted} ({p}%)")
-  )
-results
+t1flex(t1) %>% save_as_docx(path = here::here("manuscript-figs", "table1.docx"), landscape = TRUE)
+
 
