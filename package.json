@@ -6,12 +6,14 @@
     "build": "rimraf dist && observable build",
     "dev": "observable preview",
     "deploy": "observable deploy",
-    "observable": "observable"
+    "observable": "observable",
+    "capture-plots": "node plot-exports/capture-plots.cjs"
   },
   "dependencies": {
     "@observablehq/framework": "latest",
     "d3-dsv": "^3.0.1",
-    "d3-time-format": "^4.1.0"
+    "d3-time-format": "^4.1.0",
+    "puppeteer": "^24.8.2"
   },
   "devDependencies": {
     "rimraf": "^5.0.5"

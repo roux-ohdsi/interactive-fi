@@ -119,7 +119,6 @@ const all_plot = Plot.plot({
 
 
 <center><h1>OHDSI Frailty Study</h1></center>
-
 <div class="grid grid-cols-1">
   <div class="card">
     ${[lb, meas]}
@@ -127,15 +126,11 @@ const all_plot = Plot.plot({
 </div>
   
 <div class="grid grid-cols-1">
-
   <div class="card">
     ${resize((width) => all_plot)}
     <div style = "float:right;display:inline;">
       <div style="display:inline-block;margin-right: 20px;">${all_plot.legend("color")}</div>
       <div style="display:inline-block;">${all_plot.legend("symbol")}</div>
     </div>
-  </div>
-  
 </div>
-
 
