@@ -11,6 +11,8 @@ overall = list.files(here("docs", "data","data"),
                      pattern = ".csv",
                      full.names = TRUE)
 
+
+
 # remove categories from overall
 overall = overall[!overall %in% categories]
 
@@ -91,6 +93,9 @@ paper_stats2 = all |>
             prop_frail = n_frail/ss*100,
             prop_robust = n_robust/ss*100)
 
+# all |> distinct(lb, fi, source, meas)
+# write_csv(all, here::here("manuscript-figs", "2025-07-24_overall-fi-dat.csv"))
+
 # 
 # us_1yr_only = all |> 
 #   filter(country == "US", lb == "1-year lookback", fi == "efi") |> 
@@ -127,7 +132,6 @@ all = all |>
   distinct() %>%
   arrange(fi, country, source, lb, meas, sex, age_group)
 
-#write_csv(all, here::here("manuscript-figs", "all_dat.csv"))
 
 cat(format_csv(all))
 

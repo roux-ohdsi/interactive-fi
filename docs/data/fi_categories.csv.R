@@ -10,6 +10,24 @@ cats = list.files(here("docs", "data","data"),
 #     mutate(file = file) 
 # }
 # 
+# 
+cat_labels = readxl::read_excel(
+  here("docs", "data", "data", "align-data", "category-links.xls"),
+  sheet = 2
+) |> 
+  select(1, category = 2, label = 4)
+
+cat_labels2 = readxl::read_excel(
+  here("docs", "data", "data", "align-data", "category-links.xls"),
+  sheet = 2
+) |> 
+  select(category = 3, label = 4) |> 
+  mutate(fi = "vafi")
+
+cl = bind_rows(cat_labels, cat_labels2) |> 
+  bind_rows(
+    tibble(fi = "vafi")
+  )
 
 read_csv_name_o = function(file){
   tmp = read_csv(file) %>%
@@ -52,6 +70,18 @@ all = bind_rows(t, tv) |>
   mutate(country = ifelse(str_detect(source, "allofus|pharmetrics"), "US", "UK"),
                           age_group = ifelse(str_detect(age_group, "120"), "[80,100]", age_group))|> 
   arrange(source,  sex, age_group)
+
+all = all |> left_join(cl, by = c("fi", "category")) |> 
+  mutate(label = ifelse(is.na(label), category, label)) |> 
+  mutate(
+    old_category = category,
+    category = label) |> 
+  select(-label) |> 
+  arrange(fi, category)
+
+# all |> distinct(lb, fi, source, meas)
+# write_csv(all, here::here("manuscript-figs", "2025-07-24_categories-fi-dat.csv"))
+
 
 us_1yr_only = all |> 
   filter(country == "US", lb == "1-year lookback", meas == "no") |> 
