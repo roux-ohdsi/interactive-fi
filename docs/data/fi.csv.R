@@ -74,7 +74,16 @@ ov = o %>%
 all = bind_rows(o, ov) |> 
   mutate(country = ifelse(str_detect(source, "allofus|pharmetrics"), "US", "UK"),
          age_group = ifelse(str_detect(age_group, "120"), "[80,120]", age_group))|> 
-  arrange(source,  sex, age_group)
+  arrange(source,  sex, age_group)  |> 
+  mutate(
+    source = case_when(
+      source == "allofus" ~ "All of Us",
+      source == "imrd-emis" ~ "IMRD - EMIS",
+      source == "imrd-uk" ~ "IMRD - THIN",
+      source == "pharmetrics" ~ "Pharmetrics+",
+      source == "ukbb" ~ "UK BioBank"
+    )
+  )
 
 
 # paper stats

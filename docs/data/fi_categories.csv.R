@@ -26,7 +26,9 @@ cat_labels2 = readxl::read_excel(
 
 cl = bind_rows(cat_labels, cat_labels2) |> 
   bind_rows(
-    tibble(fi = "vafi")
+    tibble(fi = rep("vafi",3),
+           category = c("Chronpain", "PerNeuro", "Liver"),
+           label = c("Chronic Pain", "Peripheral Neuropathy", "Liver Disease"))
   )
 
 read_csv_name_o = function(file){
@@ -77,10 +79,19 @@ all = all |> left_join(cl, by = c("fi", "category")) |>
     old_category = category,
     category = label) |> 
   select(-label) |> 
-  arrange(fi, category)
+  arrange(fi, category) |> 
+  mutate(
+    source = case_when(
+      source == "allofus" ~ "All of Us",
+      source == "imrd-emis" ~ "IMRD - EMIS",
+      source == "imrd-uk" ~ "IMRD - THIN",
+      source == "pharmetrics" ~ "Pharmetrics+",
+      source == "ukbb" ~ "UK BioBank"
+    )
+  )
 
-# all |> distinct(lb, fi, source, meas)
-# write_csv(all, here::here("manuscript-figs", "2025-07-24_categories-fi-dat.csv"))
+#all |> distinct(lb, fi, source, meas)
+#write_csv(all, here::here("manuscript-figs", "2025-07-24_categories-fi-dat.csv"))
 
 
 us_1yr_only = all |> 

@@ -5,7 +5,6 @@ theme: [air, alt]
 ---
 
 
-
 ```js
 const lb2 = Inputs.radio(["1-year lookback", "3-year lookback"], {label: "UK Lookback period:", value: "1-year lookback"});
 const lb_data2 = Generators.input(lb2);
@@ -80,6 +79,9 @@ const meas_data = Generators.input(meas)
                       ]},
       width,
       symbol: {legend: false},
+      style: {
+        overflow: "visible"
+          },
       marks: [
          Plot.ruleY([0]),
          Plot.dot(selected_vafi_data, {x: "age_group",
